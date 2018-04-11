@@ -1,5 +1,5 @@
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+var mongoose=require('../config/config');
+var Item=require('../models/item');
 
 var todayDate=new Date();
 var todayDateFormat=todayDate.getUTCFullYear()+'-' + ("0" + (todayDate.getMonth() + 1)).slice(-2) + '-'+todayDate.getDate();
@@ -33,25 +33,22 @@ pages
         });
 }
 
-
 function updatePosts(data)
 {
-    MongoClient.connect(url,(err, db)=> {
-        if (err) throw err;
-        var dbo = db.db("mydb");
+   
         for(i=0;i<data.length;i++)
         {
             console.log(`to update ${data[i].id}`);
-            var updateParam = { id:data[i].id };
+            var query = { id:data[i].id };
             var toUpdate={ $set: {title: data[i].title.rendered}};
-            dbo.collection("customers").updateOne(updateParam, toUpdate,(err, res)=> {
-                if (err) throw err;
-                console.log(JSON.stringify(res,undefined,2));
-                //db.close();
-            });
-    
+            // update
+            Item.update(query,toUpdate)
+                .then((data)=>{
+                    console.log(data);
+                },(err)=>{
+                    console.log(err);
+                })
         }
-    });
 }
 
 module.exports.update=update;

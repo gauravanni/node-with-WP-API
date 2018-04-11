@@ -1,11 +1,12 @@
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
+var mongoose=require('../config/config');
+var Item=require('../models/item');
 
 var insert=function(posts,pages){
+    
 // insert posts
 posts
     .then((data)=>{
-            //console.log('inserting posts....');
+            console.log('inserting posts....');
             fetchMysql(data);
         }).catch((err)=>{
             console.log(err);
@@ -14,7 +15,7 @@ posts
 // insert pages
 pages
     .then((data)=>{
-            //console.log('inserting pages....');
+            console.log('inserting pages....');
             fetchMysql(data);
         }).catch((err)=>{
             console.log(err);
@@ -22,9 +23,6 @@ pages
 }
 
 function fetchMysql(data){
-    MongoClient.connect(url,(err, db)=> {
-    if (err) throw err;
-    var dbo = db.db("mydb");
     for(i=0;i<data.length;i++)
     {
             var postDate=new Date(data[i].date_gmt);
@@ -33,18 +31,18 @@ function fetchMysql(data){
             var todayDateFormat=todayDate.getUTCFullYear()+'-' + (todayDate.getMonth()+1) + '-'+todayDate.getDate();
             //console.log(todayDateFormat);
             // insert
-            if(postDateFormat===todayDateFormat)
-            {
+             if(postDateFormat===todayDateFormat)
+             {
                 var myobj={title:data[i].title.rendered,link:data[i].link,type:data[i].type,id:data[i].id,status:data[i].status};
-                dbo.collection("customers").insert(myobj,(err, res)=> {
-                if (err) throw err;
-                console.log("1 document inserted");
-                });
+                var item=new Item(myobj);
+                item.save().then((data)=>{
+                    console.log(data);
+                },(err)=>{
+                    console.log(err);
+                })
             }
-        
-
     }
-});
+
 }
 
-module.exports.insert=insert;
+module.exports={insert};
