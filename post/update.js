@@ -6,16 +6,17 @@ var todayDateFormat=todayDate.getUTCFullYear()+'-' + ("0" + (todayDate.getMonth(
 var currentDate=`${todayDateFormat}T00:00:00`;
 
 var update=function(posts,pages){
-console.log('here',currentDate);
+console.log('current Date',currentDate);
 // update posts
 posts
 .param('modified_after',currentDate)
     .then((data)=>{
+        console.log(`posts = ${data.length}`);
         if(data.length>0)
         {
             return updatePosts(data);
         }
-       console.log('no posts to update');
+        console.log('no posts to update');
     }).catch((err)=>{
         console.log(err);
     })
@@ -23,6 +24,7 @@ posts
 pages
     .param('modified_after',currentDate)
         .then((data)=>{
+            console.log(`pages = ${data.length}`);
             if(data.length>0)
             {
                 return updatePosts(data);
@@ -35,20 +37,29 @@ pages
 
 function updatePosts(data)
 {
-   
         for(i=0;i<data.length;i++)
         {
-            console.log(`to update ${data[i].id}`);
-            var query = { id:data[i].id };
-            var toUpdate={ $set: {title: data[i].title.rendered}};
-            // update
-            Item.update(query,toUpdate)
-                .then((data)=>{
-                    console.log(data);
-                },(err)=>{
-                    console.log(err);
-                })
+                var postDate=new Date(data[i].date_gmt);
+                var modifiedDate=new Date(data[i].modified_gmt);
+                var diff=modifiedDate-postDate;
+                if(diff>0)
+                {
+                    //update
+                    var query = { id:data[i].id };
+                    var toUpdate={ $set: {title: data[i].title.rendered}};
+                    Item.update(query,toUpdate)
+                        .then((data)=>{
+                            console.log(data);
+                        },(err)=>{
+                            console.log(err);
+                    });
+                }
+                else
+                {
+                    console.log('nothing to update');
+                }
+               
         }
 }
 
-module.exports.update=update;
+module.exports={update};

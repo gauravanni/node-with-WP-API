@@ -1,13 +1,17 @@
 var mongoose=require('../config/config');
 var Item=require('../models/item');
 
-var insert=function(posts,pages){
-    
+var insert=function(posts,pages,res){
+
 // insert posts
 posts
     .then((data)=>{
-            console.log('inserting posts....');
-            fetchMysql(data);
+            console.log(`posts= ${data.length}`);
+            if(data.length>0)
+            {
+                return fetchMysql(data,res);
+            }
+            console.log('no posts to insert');
         }).catch((err)=>{
             console.log(err);
         });
@@ -15,14 +19,18 @@ posts
 // insert pages
 pages
     .then((data)=>{
-            console.log('inserting pages....');
-            fetchMysql(data);
+        console.log(`pages= ${data.length}`);
+            if(data.length>0)
+            {
+                return fetchMysql(data,res);
+            }
+            console.log('no pages to insert');
         }).catch((err)=>{
             console.log(err);
         });
 }
 
-function fetchMysql(data){
+function fetchMysql(data,res){
     for(i=0;i<data.length;i++)
     {
             var postDate=new Date(data[i].date_gmt);
@@ -39,7 +47,10 @@ function fetchMysql(data){
                     console.log(data);
                 },(err)=>{
                     console.log(err);
-                })
+                });
+            }
+            else{
+                console.log('nothing to update....');
             }
     }
 
