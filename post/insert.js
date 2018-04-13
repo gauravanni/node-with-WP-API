@@ -1,7 +1,7 @@
 var mongoose=require('../config/config');
 var Item=require('../models/item');
 
-var insert=function(posts,pages,res){
+var insert=function(posts,pages){
 
 // insert posts
 posts
@@ -30,7 +30,7 @@ pages
         });
 }
 
-function fetchMysql(data,res){
+function fetchMysql(data){
     for(i=0;i<data.length;i++)
     {
             var postDate=new Date(data[i].date_gmt);
@@ -41,7 +41,7 @@ function fetchMysql(data,res){
             // insert
              if(postDateFormat===todayDateFormat)
              {
-                var myobj={title:data[i].title.rendered,link:data[i].link,type:data[i].type,id:data[i].id,status:data[i].status};
+                var myobj={title:pages[i].title.rendered,link:pages[i].link,type:pages[i].type,id:pages[i].id,status:pages[i].status,content:pages[i].content.rendered};
                 var item=new Item(myobj);
                 item.save().then((data)=>{
                     console.log(data);

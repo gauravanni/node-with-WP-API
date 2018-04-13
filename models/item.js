@@ -1,7 +1,7 @@
 var mongoose=require('mongoose');
 var Schema=mongoose.Schema;
 
-var ItemSchema=new Schema({
+var WpSchema=new Schema({
     title:{
         type:String,
         required:true,
@@ -22,8 +22,14 @@ var ItemSchema=new Schema({
         type:Number,
         required:true
     },category:{
-        type:String,
+        type:String
+    },
+    content:{
+        type:String
+    },
+    instance:{
+        type:String
     }
 });
 
-module.exports=mongoose.model('Item',ItemSchema);	
+module.exports=mongoose.model('Wp-sink',WpSchema);	

@@ -46,7 +46,7 @@ function updatePosts(data)
                 {
                     //update
                     var query = { id:data[i].id };
-                    var toUpdate={ $set: {title: data[i].title.rendered}};
+                    var toUpdate={ $set: {title: data[i].title.rendered,content: data[i].content.rendered}};
                     Item.update(query,toUpdate)
                         .then((data)=>{
                             console.log(data);

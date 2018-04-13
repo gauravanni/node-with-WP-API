@@ -1,28 +1,31 @@
-var post=require('./post/post');
-var mcache = require('memory-cache');
-var express=require('express');
-var bodyParser=require('body-parser');
-var app=express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-var _ = require( 'lodash' );
+const users=[{
+  id:1,
+  name:'Gaurav',
+  SchoolId:101
+},{
+  id:2,
+  name:'Kumar',
+  SchoolId:102
+}];
 
-var WPAPI = require( 'wpapi' );
-var wp = new WPAPI({ endpoint: 'https://byjus.com/staging-chemistry/wp-json' });
+const grades=[];
 
-wp.posts()
-  .param('modified_after','2018-04-10T00:00:00')
-  .then((data)=>{
-    console.log('first',data);
-  }).catch((err)=>{
-    console.log(err)
+const getUser=(id)=>{
+  return new Promise((resolve,reject)=>{
+      const userMatch=users.find((user)=>{
+        return user.id===id;
+      })
+      if(userMatch)
+      {
+        return resolve(userMatch);
+      }
+      reject(`does not match user with ${id}`);
   })
+}
 
-
-app.listen(8000,()=>{
-  console.log('port started at 8000');
-})
-
-
-
-
+getUser(3)
+.then((user)=>{
+  console.log(user);
+}).catch((e)=>{
+console.log(e);
+});

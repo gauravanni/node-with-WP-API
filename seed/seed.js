@@ -31,7 +31,7 @@ getAll( wp.pages().perPage(5) ).then(function( pages ) {
 for(var i=0;i<pages.length;i++)
 {
         console.log('inside for loop....');
-        var myobj={title:pages[i].title.rendered,link:pages[i].link,type:pages[i].type,id:pages[i].id,status:pages[i].status};
+        var myobj={title:pages[i].title.rendered,link:pages[i].link,type:pages[i].type,id:pages[i].id,status:pages[i].status,content:pages[i].content.rendered,instance:'cbse-schools-madhya-pradesh'};
         var item=new Item(myobj);
         item.save().then((data)=>{
             console.log(data);
