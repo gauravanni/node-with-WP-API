@@ -22,6 +22,7 @@ var month=currDate.getMonth();
 var days=currDate.getDate();
 console.log(`year= ${year} month=${month} days=${days}`);
 app.get('/',(req,res)=>{
+	res.send('WP Sync DB');
 	// cron job
 	var date=new Date(`${year},${month},${days},21,30,0`);
 	cron.scheduleJob(date,()=>{
